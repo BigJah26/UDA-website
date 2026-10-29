@@ -1,12 +1,12 @@
 /* ============================================================
-   IDO website script (shared by every page)
+   UDA website script (shared by every page)
    ============================================================ */
 
 // Live data links. Paste your bots' Railway URLs here when ready.
 // Leave a link empty ('') to keep showing the placeholder content.
 const API = {
   clans: '',        // Duke: Banner Points, e.g. 'https://your-duke-bot.up.railway.app/leaderboard'
-  players: '',      // High Arbiter: player ratings, e.g. 'https://your-high-arbiter.up.railway.app/leaderboard'
+  players: '',      // Duke: player ratings, e.g. 'https://your-duke-bot.up.railway.app/leaderboard'
   tournaments: ''   // Duke: events, e.g. 'https://your-duke-bot.up.railway.app/tournaments'
 };
 
