@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Leaderboard | United Dueling Amity</title>
-<meta name="description" content="Live clan Banner Points and player rankings for UDA Dueling Grounds competition.">
-<meta property="og:title" content="Leaderboard | United Dueling Amity">
-<meta property="og:description" content="Live clan Banner Points and player rankings for UDA Dueling Grounds competition.">
+<title>Tournaments | United Dueling Amity</title>
+<meta name="description" content="Upcoming and past UDA Dueling Grounds tournaments.">
+<meta property="og:title" content="Tournaments | United Dueling Amity">
+<meta property="og:description" content="Upcoming and past UDA Dueling Grounds tournaments.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://unitedduelingamity.org/uda-logo.jpg">
 <meta name="theme-color" content="#f6faf7">
@@ -18,7 +18,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-<body data-page="leaderboard">
+<body data-page="tournaments">
 <div class="site-bg" aria-hidden="true"></div>
 
 <nav>
@@ -37,9 +37,9 @@
 
 <header class="page-hero">
   <div class="wrap">
-    <div class="eyebrow">Standings</div>
-    <h1>Leaderboard</h1>
-    <p>Where every clan and dueler stands in UDA competition.</p>
+    <div class="eyebrow">Events</div>
+    <h1>Tournaments</h1>
+    <p>Official UDA events. Sign-ups happen in the Discord.</p>
     <div class="divider"></div>
   </div>
 </header>
@@ -47,25 +47,22 @@
 <section>
   <div class="wrap reveal stack">
     <div>
-      <div class="tabs">
-        <button class="tab active" data-board="clans">Clans (Banner Points)</button>
-        <button class="tab" data-board="players">Players</button>
+      <h2 class="small">Upcoming</h2>
+      <div class="divider"></div>
+      <div class="grid" id="tournament-list"></div>
+      <div class="empty" id="tournament-empty">
+        <div class="empty-icon">&#10022;</div>
+        <h3>No tournaments scheduled yet</h3>
+        <p>New events will appear here as soon as they're announced. Join the Discord to be the first to know.</p>
       </div>
-      <div class="board">
-        <table>
-          <thead><tr><th>Rank</th><th id="col-name">Clan</th><th class="score" id="col-score">Banner Points</th></tr></thead>
-          <tbody id="board-body"></tbody>
-        </table>
-      </div>
-      <p class="note" id="board-note">The season has not started yet. No Banner Points have been awarded.</p>
     </div>
 
     <div>
-      <h2 class="small">How rankings work</h2>
+      <h2 class="small">Past Results</h2>
       <div class="divider"></div>
-      <div class="grid">
-        <div class="card"><h3>Banner Points</h3><p>Clans earn Banner Points through official UDA competition. Duke tracks every clan result, so the clan standings update as matches are recorded.</p></div>
-        <div class="card"><h3>Player Ratings</h3><p>Individual duelers are ranked by Duke, which updates player ratings as matches are played.</p></div>
+      <div class="empty compact">
+        <h3>No results yet</h3>
+        <p>Winners and final standings will be posted here after the first tournament.</p>
       </div>
     </div>
   </div>
@@ -76,7 +73,7 @@
     <h2>Prove yourself in the <span class="grad-text">arena</span></h2>
     <div class="divider"></div>
     <p class="sub" style="margin: 0 auto 30px;">Whether you lead a clan or you're just getting started, this is where reputations are made.</p>
-    <a class="btn btn-primary" href="https://discord.gg/gZj7TFxwW" target="_blank" rel="noopener">Join UDA on Discord <span class="arrow">&rarr;</span></a>
+    <a class="btn btn-primary" href="https://discord.gg/K6JbJSNu7H" target="_blank" rel="noopener">Join UDA on Discord <span class="arrow">&rarr;</span></a>
   </div>
 </section>
 
