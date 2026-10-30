@@ -2,12 +2,13 @@
    UDA website script (shared by every page)
    ============================================================ */
 
-// Live data links. Paste your bots' Railway URLs here when ready.
+// Live data links from Duke (hosted on Render).
 // Leave a link empty ('') to keep showing the placeholder content.
 const API = {
   clans: 'https://ido-bot.onrender.com/leaderboard',
   players: 'https://ido-bot.onrender.com/players',
-  tournaments: 'https://ido-bot.onrender.com/tournaments'
+  tournaments: 'https://ido-bot.onrender.com/tournaments',
+  pastResults: 'https://ido-bot.onrender.com/past-results'
 };
 
 // Placeholder standings shown until the links above are filled in.
@@ -20,11 +21,11 @@ const SAMPLE = {
     { name: 'Clan Five', score: 0 }
   ],
   players: [
-    { name: 'Player One', score: 0 },
-    { name: 'Player Two', score: 0 },
-    { name: 'Player Three', score: 0 },
-    { name: 'Player Four', score: 0 },
-    { name: 'Player Five', score: 0 }
+    { name: 'Player One', score: 2150 },
+    { name: 'Player Two', score: 2030 },
+    { name: 'Player Three', score: 1925 },
+    { name: 'Player Four', score: 1810 },
+    { name: 'Player Five', score: 1760 }
   ]
 };
 
@@ -181,6 +182,63 @@ if (tournamentList) {
     if (events.length === 0) return;
     events.forEach(ev => tournamentList.appendChild(eventCard(ev)));
     document.getElementById('tournament-empty').style.display = 'none';
+  });
+}
+
+/* ---------- Past results (from Duke's /past-results) ----------
+   Expected format (the site sorts newest first):
+   [{ "name": "Autumn Clan Cup", "date": "2026-11-08", "type": "Clan Cup",
+      "champion": "Blue Fire", "runner_up": "Leviathans", "score": "3-1",
+      "notes": "Championship Final" }]
+   Also accepts "winner" for champion, "runnerUp", "final_score",
+   and "description" in place of "notes". */
+
+async function getPastResults() {
+  if (!API.pastResults) return [];
+  try {
+    const rows = await getJSON(API.pastResults);
+    if (!Array.isArray(rows)) return [];
+    return rows.sort((x, y) => String(y.date).localeCompare(String(x.date)));
+  } catch (e) {
+    console.error('Failed to fetch past results:', e);
+    return [];
+  }
+}
+
+function resultCard(r) {
+  const champion = r.champion || r.winner || r.champion_clan || 'TBD';
+  const runnerUp = r.runner_up || r.runnerUp || r.runner_up_clan || '';
+  const score = r.score || r.final_score || r.finalScore || '';
+  const notes = r.notes || r.description || '';
+  const [, m, d] = String(r.date || '').split('-');
+
+  const card = document.createElement('div');
+  card.className = 'card event';
+  card.innerHTML = `<div class="date"><div class="m"></div><div class="d"></div></div>
+    <div style="flex: 1;">
+      <span class="tag"></span><h3></h3>
+      <p class="notes"></p>
+      <p class="result-line"><span>&#127942; Champion:</span> <strong class="champ"></strong></p>
+      <p class="result-line runner"><span>&#129352; Runner-up:</span> <strong class="ru"></strong></p>
+      <p class="result-line scoreline"><span>&#9876;&#65039; Final score:</span> <strong class="sc"></strong></p>
+    </div>`;
+  card.querySelector('.m').textContent = MONTHS[Number(m) - 1] || 'DONE';
+  card.querySelector('.d').textContent = d || '--';
+  card.querySelector('.tag').textContent = r.type || 'Concluded';
+  card.querySelector('h3').textContent = r.name || 'Tournament';
+  if (notes) card.querySelector('.notes').textContent = notes; else card.querySelector('.notes').remove();
+  card.querySelector('.champ').textContent = champion;
+  if (runnerUp) card.querySelector('.ru').textContent = runnerUp; else card.querySelector('.runner').remove();
+  if (score) card.querySelector('.sc').textContent = score; else card.querySelector('.scoreline').remove();
+  return card;
+}
+
+const pastList = document.getElementById('past-results-list');
+if (pastList) {
+  getPastResults().then(results => {
+    if (results.length === 0) return;
+    results.forEach(r => pastList.appendChild(resultCard(r)));
+    document.getElementById('past-results-empty').style.display = 'none';
   });
 }
 
