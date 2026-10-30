@@ -242,6 +242,9 @@ th.score { text-align: right; }
   border-radius: 999px; background: rgba(40, 180, 110, 0.12); color: var(--deep); margin-bottom: 6px;
 }
 .event h3::before { content: none; }
+.result-line { margin-top: 4px; }
+.result-line span { color: var(--muted); }
+.result-line strong { color: var(--stone); }
 
 .empty {
   text-align: center; padding: 44px 24px;
