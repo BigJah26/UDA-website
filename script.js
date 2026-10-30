@@ -5,6 +5,10 @@
 // Live data links. Paste your bots' Railway URLs here when ready.
 // Leave a link empty ('') to keep showing the placeholder content.
 const API = {
+  clans: 'https://ido-bot.onrender.com/leaderboard',
+  players: 'https://ido-bot.onrender.com/players',
+  tournaments: 'https://ido-bot.onrender.com/tournaments'
+};
   clans: '',        // Duke: Banner Points, e.g. 'https://your-duke-bot.up.railway.app/leaderboard'
   players: '',      // Duke: player ratings, e.g. 'https://your-duke-bot.up.railway.app/leaderboard'
   tournaments: ''   // Duke: events, e.g. 'https://your-duke-bot.up.railway.app/tournaments'
