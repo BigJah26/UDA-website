@@ -20,11 +20,11 @@ const SAMPLE = {
     { name: 'Clan Five', score: 0 }
   ],
   players: [
-    { name: 'Player One', score: 2150 },
-    { name: 'Player Two', score: 2030 },
-    { name: 'Player Three', score: 1925 },
-    { name: 'Player Four', score: 1810 },
-    { name: 'Player Five', score: 1760 }
+    { name: 'Player One', score: 0 },
+    { name: 'Player Two', score: 0 },
+    { name: 'Player Three', score: 0 },
+    { name: 'Player Four', score: 0 },
+    { name: 'Player Five', score: 0 }
   ]
 };
 
