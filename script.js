@@ -9,10 +9,6 @@ const API = {
   players: 'https://ido-bot.onrender.com/players',
   tournaments: 'https://ido-bot.onrender.com/tournaments'
 };
-  clans: '',        // Duke: Banner Points, e.g. 'https://your-duke-bot.up.railway.app/leaderboard'
-  players: '',      // Duke: player ratings, e.g. 'https://your-duke-bot.up.railway.app/leaderboard'
-  tournaments: ''   // Duke: events, e.g. 'https://your-duke-bot.up.railway.app/tournaments'
-};
 
 // Placeholder standings shown until the links above are filled in.
 const SAMPLE = {
