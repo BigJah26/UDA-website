@@ -2,36 +2,34 @@
    UDA website script (shared by every page)
    ============================================================ */
 
-// Live data links from Duke (hosted on Render).
-// Leave a link empty ('') to keep showing the placeholder content.
+// Herald (Banner Points and duelist rankings) runs on Railway.
+// Paste Herald's Railway address here, with no slash at the end.
+const HERALD = 'https://web-production-cc302.up.railway.app';
+
+// Duke (tournaments) runs on Render.
+const DUKE = 'https://ido-bot.onrender.com';
+
 const API = {
-  clans: 'https://ido-bot.onrender.com/leaderboard',
-  players: 'https://ido-bot.onrender.com/players',
-  tournaments: 'https://ido-bot.onrender.com/tournaments',
-  pastResults: 'https://ido-bot.onrender.com/past-results'
+  clans: HERALD.includes('YOUR-HERALD') ? '' : HERALD + '/leaderboard',
+  players: HERALD.includes('YOUR-HERALD') ? '' : HERALD + '/players',
+  tournaments: DUKE + '/tournaments',
+  pastResults: DUKE + '/past-results'
 };
 
-// Placeholder standings shown until the links above are filled in.
+// Shown until Herald is connected.
 const SAMPLE = {
-  clans: [
-    { name: 'Clan One', score: 0 },
-    { name: 'Clan Two', score: 0 },
-    { name: 'Clan Three', score: 0 },
-    { name: 'Clan Four', score: 0 },
-    { name: 'Clan Five', score: 0 }
-  ],
-  players: [
-    { name: 'Player One', score: 2150 },
-    { name: 'Player Two', score: 2030 },
-    { name: 'Player Three', score: 1925 },
-    { name: 'Player Four', score: 1810 },
-    { name: 'Player Five', score: 1760 }
-  ]
+  clans: [],
+  players: []
 };
 
 const LABELS = {
   clans: { name: 'Clan', score: 'Banner Points' },
-  players: { name: 'Player', score: 'Rating' }
+  players: { name: 'Duelist', score: 'Wins' }
+};
+
+const EMPTY_TEXT = {
+  clans: 'No Banner Points have been awarded yet.',
+  players: 'No fights have been recorded yet.'
 };
 
 const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
@@ -116,7 +114,10 @@ async function getTournaments() {
   try {
     const events = await getJSON(API.tournaments);
     if (!Array.isArray(events)) return [];
-    return events.sort((x, y) => String(x.date).localeCompare(String(y.date)));
+    // Finished tournaments belong in Past Results, not Upcoming
+    return events
+      .filter(ev => String(ev.status || '').toLowerCase() !== 'completed')
+      .sort((x, y) => String(x.date).localeCompare(String(y.date)));
   } catch (e) {
     return [];
   }
@@ -131,7 +132,8 @@ function eventCard(ev) {
   card.querySelector('.m').textContent = MONTHS[Number(m) - 1] || 'TBA';
   card.querySelector('.d').textContent = d || '--';
   const tag = card.querySelector('.tag');
-  if (ev.type) tag.textContent = ev.type; else tag.remove();
+  const open = String(ev.status || '').toLowerCase() === 'open';
+  if (ev.type || open) tag.textContent = open ? `Open now${ev.type ? ' · ' + ev.type : ''}` : ev.type; else tag.remove();
   card.querySelector('h3').textContent = ev.name || 'Tournament';
   card.querySelector('p').textContent = ev.description || '';
   return card;
@@ -148,18 +150,34 @@ if (boardBody) {
     const { rows, live, failed } = await getStandings(board);
 
     boardBody.innerHTML = '';
+    if (rows.length === 0) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td colspan="3" class="empty-row"></td>';
+      tr.firstChild.textContent = EMPTY_TEXT[board];
+      boardBody.appendChild(tr);
+    }
     rows.forEach((r, i) => {
       const tr = document.createElement('tr');
       const cls = i < 3 ? 'r' + (i + 1) : '';
-      tr.innerHTML = `<td class="rank ${cls}">#${i + 1}</td><td></td><td class="score">${Number(r.score).toLocaleString()}</td>`;
-      tr.children[1].textContent = r.name;
+      tr.innerHTML = `<td class="rank ${cls}">#${i + 1}</td><td><span class="who"></span><span class="sub"></span></td><td class="score"></td>`;
+      tr.querySelector('.who').textContent = r.name;
+      if (board === 'players') {
+        // Duelists: wins in the score column, record and clan under the name
+        tr.querySelector('.score').textContent = Number(r.wins ?? r.score).toLocaleString();
+        const bits = [];
+        if (r.wins != null && r.losses != null) bits.push(`${r.wins}W ${r.losses}L`);
+        if (r.clan) bits.push(r.clan);
+        tr.querySelector('.sub').textContent = bits.join(' · ');
+      } else {
+        tr.querySelector('.score').textContent = Number(r.score).toLocaleString();
+        tr.querySelector('.sub').remove();
+      }
       boardBody.appendChild(tr);
     });
 
-    if (live) note.textContent = 'Live standings.';
-    else if (failed) note.textContent = 'Live data unavailable right now. Showing placeholder data.';
-    else if (board === 'clans') note.textContent = 'The season has not started yet. No Banner Points have been awarded.';
-    else note.textContent = 'Sample data shown. Live standings coming soon.';
+    if (live) note.textContent = 'Live standings from Herald.';
+    else if (failed) note.textContent = 'Live data is unavailable right now. Please check back soon.';
+    else note.textContent = EMPTY_TEXT[board];
   }
 
   document.querySelectorAll('.tab').forEach(tab => {
