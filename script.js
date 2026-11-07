@@ -32,6 +32,11 @@ const EMPTY_TEXT = {
   players: 'No fights have been recorded yet.'
 };
 
+// Clan roles end in '//' in Discord. Never show that on the website.
+function cleanName(name) {
+  return String(name || '').replace(/\s*\/\/\s*$/, '').trim();
+}
+
 const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 
 /* ---------- Shared page setup ---------- */
@@ -160,13 +165,13 @@ if (boardBody) {
       const tr = document.createElement('tr');
       const cls = i < 3 ? 'r' + (i + 1) : '';
       tr.innerHTML = `<td class="rank ${cls}">#${i + 1}</td><td><span class="who"></span><span class="sub"></span></td><td class="score"></td>`;
-      tr.querySelector('.who').textContent = r.name;
+      tr.querySelector('.who').textContent = board === 'clans' ? cleanName(r.name) : r.name;
       if (board === 'players') {
         // Duelists: wins in the score column, record and clan under the name
         tr.querySelector('.score').textContent = Number(r.wins ?? r.score).toLocaleString();
         const bits = [];
         if (r.wins != null && r.losses != null) bits.push(`${r.wins}W ${r.losses}L`);
-        if (r.clan) bits.push(r.clan);
+        if (r.clan) bits.push(cleanName(r.clan));
         tr.querySelector('.sub').textContent = bits.join(' · ');
       } else {
         tr.querySelector('.score').textContent = Number(r.score).toLocaleString();
@@ -224,8 +229,8 @@ async function getPastResults() {
 }
 
 function resultCard(r) {
-  const champion = r.champion || r.winner || r.champion_clan || 'TBD';
-  const runnerUp = r.runner_up || r.runnerUp || r.runner_up_clan || '';
+  const champion = cleanName(r.champion || r.winner || r.champion_clan) || 'TBD';
+  const runnerUp = cleanName(r.runner_up || r.runnerUp || r.runner_up_clan);
   const score = r.score || r.final_score || r.finalScore || '';
   const notes = r.notes || r.description || '';
   const [, m, d] = String(r.date || '').split('-');
@@ -271,7 +276,7 @@ if (topClans) {
       const row = document.createElement('div');
       row.className = 'mini-row';
       row.innerHTML = `<span class="pos r${i + 1}">#${i + 1}</span><span class="who"></span><span class="pts">${Number(r.score).toLocaleString()}</span>`;
-      row.querySelector('.who').textContent = r.name;
+      row.querySelector('.who').textContent = cleanName(r.name);
       topClans.appendChild(row);
     });
   });
