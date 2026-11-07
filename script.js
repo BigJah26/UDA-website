@@ -172,6 +172,8 @@ if (boardBody) {
         const bits = [];
         if (r.wins != null && r.losses != null) bits.push(`${r.wins}W ${r.losses}L`);
         if (r.clan) bits.push(cleanName(r.clan));
+        if (r.streak >= 2) bits.push(`🔥 ${r.streak} in a row`);
+        if (r.bounty > 0) bits.push(`🎯 ${Number(r.bounty).toLocaleString()} BP bounty`);
         tr.querySelector('.sub').textContent = bits.join(' · ');
       } else {
         tr.querySelector('.score').textContent = Number(r.score).toLocaleString();
