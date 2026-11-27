@@ -48,11 +48,11 @@
     <div>
       <div class="tabs">
         <button class="tab active" data-board="clans">Clans (Banner Points)</button>
-        <button class="tab" data-board="players">Duelists (Wins)</button>
+        <button class="tab" data-board="players">Duelists (Wins &amp; Losses)</button>
       </div>
       <div class="board">
         <table>
-          <thead><tr><th>Rank</th><th id="col-name">Clan</th><th class="score" id="col-score">Banner Points</th></tr></thead>
+          <thead><tr><th>Rank</th><th id="col-name">Clan</th><th class="score" id="col-score">Banner Points</th><th class="score" id="col-losses" hidden>Losses</th></tr></thead>
           <tbody id="board-body"></tbody>
         </table>
       </div>
@@ -64,7 +64,7 @@
       <div class="divider"></div>
       <div class="grid">
         <div class="card"><h3>Banner Points</h3><p>Every win earns your clan 100 BP and every loss still earns 40 BP. Tournament champions earn a bonus of 50 BP per bracket. Herald updates the standings as fights are recorded.</p></div>
-        <div class="card"><h3>Duelist Rankings</h3><p>Herald records the winner of every fight. Duelists are ranked by wins. Every win in a row puts a bigger bounty on your head, and whoever beats you claims it for their clan.</p></div>
+        <div class="card"><h3>Duelist Rankings</h3><p>Herald records the winner and loser of every fight. Duelists are ranked by wins, and fewer losses breaks a tie. Every win in a row puts a bigger bounty on your head, and whoever beats you claims it for their clan.</p></div>
       </div>
     </div>
   </div>

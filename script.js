@@ -151,26 +151,29 @@ if (boardBody) {
   async function loadBoard(board) {
     document.getElementById('col-name').textContent = LABELS[board].name;
     document.getElementById('col-score').textContent = LABELS[board].score;
+    const isPlayers = board === 'players';
+    document.getElementById('col-losses').hidden = !isPlayers;  // Duelists get a separate Losses column
     const note = document.getElementById('board-note');
     const { rows, live, failed } = await getStandings(board);
 
     boardBody.innerHTML = '';
     if (rows.length === 0) {
       const tr = document.createElement('tr');
-      tr.innerHTML = '<td colspan="3" class="empty-row"></td>';
+      tr.innerHTML = `<td colspan="${isPlayers ? 4 : 3}" class="empty-row"></td>`;
       tr.firstChild.textContent = EMPTY_TEXT[board];
       boardBody.appendChild(tr);
     }
     rows.forEach((r, i) => {
       const tr = document.createElement('tr');
       const cls = i < 3 ? 'r' + (i + 1) : '';
-      tr.innerHTML = `<td class="rank ${cls}">#${i + 1}</td><td><span class="who"></span><span class="sub"></span></td><td class="score"></td>`;
+      tr.innerHTML = `<td class="rank ${cls}">#${i + 1}</td><td><span class="who"></span><span class="sub"></span></td><td class="score"></td>`
+        + (isPlayers ? '<td class="score losses"></td>' : '');
       tr.querySelector('.who').textContent = board === 'clans' ? cleanName(r.name) : r.name;
       if (board === 'players') {
-        // Duelists: wins in the score column, record and clan under the name
+        // Duelists: separate Wins and Losses columns, with clan, streak and bounty under the name
         tr.querySelector('.score').textContent = Number(r.wins ?? r.score).toLocaleString();
+        tr.querySelector('.losses').textContent = Number(r.losses ?? 0).toLocaleString();
         const bits = [];
-        if (r.wins != null && r.losses != null) bits.push(`${r.wins}W ${r.losses}L`);
         if (r.clan) bits.push(cleanName(r.clan));
         if (r.streak >= 2) bits.push(`🔥 ${r.streak} in a row`);
         if (r.bounty > 0) bits.push(`🎯 ${Number(r.bounty).toLocaleString()} BP bounty`);
