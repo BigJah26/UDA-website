@@ -225,6 +225,13 @@ tr + tr td { border-top: 1px solid var(--line); }
 td.rank { font-weight: 700; width: 70px; color: var(--muted); }
 td.score { text-align: right; font-weight: 700; color: var(--stone); font-variant-numeric: tabular-nums; }
 th.score { text-align: right; }
+td.losses { color: var(--muted); }
+td .who { overflow-wrap: anywhere; }  /* long names without spaces wrap instead of pushing columns off screen */
+@media (max-width: 760px) {
+  td.rank { width: 44px; }
+  th.score, td.score { padding-left: 6px; padding-right: 10px; }
+  th { letter-spacing: .5px; }
+}
 .r1 { color: #c18a1c !important; } .r2 { color: #7f8a85 !important; } .r3 { color: #a8693a !important; }
 td .sub { display: block; font-size: .8rem; color: var(--muted); font-weight: 500; }
 td.empty-row { text-align: center; color: var(--muted); padding: 28px 18px; }
